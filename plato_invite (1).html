@@ -1,0 +1,469 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>You're Invited</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Google Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    background: #f8f9fa;
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+  }
+
+  .screen {
+    display: none;
+    width: 100%;
+    max-width: 400px;
+    padding: 32px 24px;
+    animation: slideIn 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .screen.active { display: flex; flex-direction: column; align-items: center; }
+
+  @keyframes slideIn {
+    from { opacity: 0; transform: translateX(60px); }
+    to { opacity: 1; transform: translateX(0); }
+  }
+
+  @keyframes confettiFall {
+    to { transform: translateY(110vh) rotate(720deg); opacity: 0; }
+  }
+
+  /* ── GOOGLE LOGO SVG ── */
+  .google-logo-wrap {
+    margin-bottom: 44px;
+    text-align: center;
+  }
+
+  /* ── SEARCH BAR ── */
+  .search-wrap {
+    width: 100%;
+    position: relative;
+    margin-bottom: 28px;
+  }
+
+  .search-bar {
+    width: 100%;
+    background: white;
+    border: 1px solid #dfe1e5;
+    border-radius: 28px;
+    padding: 14px 56px 14px 20px;
+    font-size: 16px;
+    color: #202124;
+    cursor: pointer;
+    box-shadow: 0 1px 6px rgba(32,33,36,.12);
+    transition: box-shadow 0.2s;
+    outline: none;
+    caret-color: transparent;
+    font-family: inherit;
+  }
+
+  .search-bar:hover { box-shadow: 0 2px 12px rgba(32,33,36,.18); }
+
+  .tap-btn {
+    position: absolute;
+    right: 6px;
+    top: 50%;
+    transform: translateY(-50%);
+    background: #4285F4;
+    border: none;
+    border-radius: 22px;
+    color: white;
+    font-size: 12px;
+    font-weight: 500;
+    padding: 7px 12px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    white-space: nowrap;
+    font-family: inherit;
+    transition: background 0.2s;
+  }
+  .tap-btn:hover { background: #3367d6; }
+
+  .tap-btn svg { width: 14px; height: 14px; fill: white; flex-shrink: 0; }
+
+  .search-btns { display: flex; justify-content: center; gap: 8px; }
+
+  .search-btn {
+    background: #f8f9fa;
+    border: 1px solid #f8f9fa;
+    border-radius: 4px;
+    color: #3c4043;
+    font-size: 14px;
+    padding: 10px 20px;
+    cursor: pointer;
+    transition: all 0.2s;
+    font-family: inherit;
+  }
+  .search-btn:hover { box-shadow: 0 1px 3px rgba(0,0,0,.2); background: #f1f3f4; }
+
+  /* ── CARD ── */
+  .card {
+    width: 100%;
+    background: white;
+    border-radius: 20px;
+    padding: 0;
+    box-shadow: 0 4px 24px rgba(32,33,36,.15);
+    overflow: hidden;
+  }
+
+  .card-top {
+    height: 6px;
+    background: linear-gradient(90deg, #4285F4, #EA4335, #FBBC05, #34A853);
+  }
+
+  .card-body { padding: 36px 28px 28px; }
+
+  .card-emoji { font-size: 48px; margin-bottom: 16px; display: block; text-align: center; }
+
+  .card-title {
+    font-size: 26px;
+    font-weight: 500;
+    color: #202124;
+    text-align: center;
+    margin-bottom: 12px;
+    line-height: 1.2;
+  }
+
+  .card-sub {
+    font-size: 15px;
+    color: #5f6368;
+    text-align: center;
+    line-height: 1.7;
+    margin-bottom: 28px;
+  }
+
+  .detail-row {
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+    background: #f8f9fa;
+    border-radius: 12px;
+    padding: 16px;
+    margin-bottom: 12px;
+  }
+
+  .detail-icon { font-size: 24px; flex-shrink: 0; }
+
+  .detail-label {
+    font-size: 11px;
+    color: #9aa0a6;
+    text-transform: uppercase;
+    letter-spacing: 0.8px;
+    margin-bottom: 3px;
+  }
+
+  .detail-val {
+    font-size: 16px;
+    color: #202124;
+    font-weight: 500;
+  }
+
+  .detail-sub {
+    font-size: 13px;
+    color: #5f6368;
+    margin-top: 2px;
+  }
+
+  .btn-primary {
+    width: 100%;
+    background: #4285F4;
+    color: white;
+    border: none;
+    border-radius: 28px;
+    padding: 16px;
+    font-size: 16px;
+    font-weight: 500;
+    cursor: pointer;
+    margin-top: 8px;
+    transition: all 0.2s;
+    font-family: inherit;
+  }
+  .btn-primary:hover { background: #3367d6; box-shadow: 0 4px 12px rgba(66,133,244,.4); transform: translateY(-1px); }
+
+  .btn-ghost {
+    width: 100%;
+    background: transparent;
+    color: #4285F4;
+    border: 2px solid #4285F4;
+    border-radius: 28px;
+    padding: 14px;
+    font-size: 15px;
+    font-weight: 500;
+    cursor: pointer;
+    margin-top: 10px;
+    transition: all 0.2s;
+    font-family: inherit;
+  }
+  .btn-ghost:hover { background: #e8f0fe; }
+
+  .dots { display: flex; gap: 8px; justify-content: center; margin-top: 24px; }
+
+  .dot {
+    height: 8px;
+    border-radius: 4px;
+    background: #dadce0;
+    transition: all 0.3s ease;
+    width: 8px;
+  }
+  .dot.active { background: #4285F4; width: 24px; }
+
+  /* ── FINAL ── */
+  .final-emoji {
+    font-size: 80px;
+    text-align: center;
+    display: block;
+    margin-bottom: 20px;
+    animation: pulse 1.5s ease-in-out infinite;
+  }
+
+  @keyframes pulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.1); }
+  }
+
+  .final-title { font-size: 32px; font-weight: 500; color: #202124; text-align: center; margin-bottom: 12px; }
+
+  .final-sub { font-size: 16px; color: #5f6368; text-align: center; line-height: 1.7; margin-bottom: 32px; }
+
+  .copy-btn {
+    width: 100%;
+    background: #4285F4;
+    color: white;
+    border: none;
+    border-radius: 12px;
+    padding: 14px;
+    font-size: 15px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s;
+    font-family: inherit;
+  }
+  .copy-btn:hover { background: #3367d6; }
+
+  .confetti-piece {
+    position: fixed;
+    width: 10px;
+    height: 10px;
+    border-radius: 2px;
+    top: -20px;
+    animation: confettiFall linear forwards;
+    pointer-events: none;
+    z-index: 999;
+  }
+</style>
+</head>
+<body>
+
+<!-- SCREEN 1: GOOGLE SEARCH -->
+<div class="screen active" id="s1">
+
+  <!-- Real Google logo as SVG -->
+  <div class="google-logo-wrap">
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 272 92" width="192" height="65" aria-label="Google">
+      <path fill="#EA4335" d="M115.75 47.18c0 12.77-9.99 22.18-22.25 22.18s-22.25-9.41-22.25-22.18C71.25 34.32 81.24 25 93.5 25s22.25 9.32 22.25 22.18zm-9.74 0c0-7.98-5.79-13.44-12.51-13.44S80.99 39.2 80.99 47.18c0 7.9 5.79 13.44 12.51 13.44s12.51-5.55 12.51-13.44z"/>
+      <path fill="#FBBC05" d="M163.75 47.18c0 12.77-9.99 22.18-22.25 22.18s-22.25-9.41-22.25-22.18c0-12.85 9.99-22.18 22.25-22.18s22.25 9.32 22.25 22.18zm-9.74 0c0-7.98-5.79-13.44-12.51-13.44s-12.51 5.46-12.51 13.44c0 7.9 5.79 13.44 12.51 13.44s12.51-5.55 12.51-13.44z"/>
+      <path fill="#4285F4" d="M209.75 26.34v39.82c0 16.38-9.66 23.07-21.08 23.07-10.75 0-17.22-7.19-19.66-13.07l8.48-3.53c1.51 3.61 5.21 7.87 11.17 7.87 7.31 0 11.84-4.51 11.84-13v-3.19h-.34c-2.18 2.69-6.38 5.04-11.68 5.04-11.09 0-21.25-9.66-21.25-22.09 0-12.52 10.16-22.26 21.25-22.26 5.29 0 9.49 2.35 11.68 4.96h.34v-3.61h9.25zm-8.56 20.92c0-7.81-5.21-13.52-11.84-13.52-6.72 0-12.35 5.71-12.35 13.52 0 7.73 5.63 13.36 12.35 13.36 6.63 0 11.84-5.63 11.84-13.36z"/>
+      <path fill="#34A853" d="M225 3v65h-9.5V3h9.5z"/>
+      <path fill="#EA4335" d="M262.02 54.48l7.56 5.04c-2.44 3.61-8.32 9.83-18.48 9.83-12.6 0-22.01-9.74-22.01-22.18 0-13.19 9.49-22.18 20.92-22.18 11.51 0 17.14 9.16 18.98 14.11l1.01 2.52-29.65 12.28c2.27 4.45 5.8 6.72 10.75 6.72 4.96 0 8.4-2.44 10.92-6.14zm-23.27-7.98l19.82-8.23c-1.09-2.77-4.37-4.7-8.23-4.7-4.95 0-11.84 4.37-11.59 12.93z"/>
+      <path fill="#4285F4" d="M35.29 41.41V32h31.syndication v27.95 fill not used"/>
+      <!-- Simplified G mark -->
+      <path fill="#4285F4" d="M35.29 41.41V32H67c.31 1.64.47 3.58.47 5.68 0 7.06-1.93 15.79-8.15 22.01-6.05 6.3-13.78 9.66-24.02 9.66C16.32 69.35.36 53.89.36 34.91.36 15.93 16.32.47 35.3.47c10.5 0 17.98 4.12 23.6 9.49l-6.64 6.64c-4.03-3.78-9.49-6.72-16.97-6.72-13.86 0-24.7 11.17-24.7 25.03 0 13.86 10.84 25.03 24.7 25.03 8.99 0 14.11-3.61 17.39-6.89 2.66-2.66 4.41-6.46 5.1-11.65l-22.49.01z"/>
+    </svg>
+  </div>
+
+  <div class="search-wrap">
+    <input
+      class="search-bar"
+      id="searchInput"
+      type="text"
+      placeholder="Search"
+      readonly
+      onclick="startSearch();"
+    />
+    <button class="tap-btn" id="tapBtn" onclick="startSearch();">
+      <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+        <path d="M15.5 14h-.79l-.28-.27A6.471 6.471 0 0 0 16 9.5 6.5 6.5 0 1 0 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/>
+      </svg>
+      tap here
+    </button>
+  </div>
+
+  <div class="search-btns">
+    <button class="search-btn" onclick="startSearch()">Google Search</button>
+    <button class="search-btn" onclick="startSearch()">I'm Feeling Lucky</button>
+  </div>
+
+</div>
+
+<!-- SCREEN 2: INVITED -->
+<div class="screen" id="s2">
+  <div class="card">
+    <div class="card-top"></div>
+    <div class="card-body">
+      <span class="card-emoji">🥂</span>
+      <h1 class="card-title">You're invited</h1>
+      <p class="card-sub">
+        After 5 years at Goldman Sachs,<br>
+        Plato is heading to his next chapter.<br><br>
+        Come raise a glass before he leaves.
+      </p>
+      <button class="btn-primary" onclick="go('s3')">Keep reading →</button>
+    </div>
+  </div>
+  <div class="dots">
+    <div class="dot active"></div><div class="dot"></div><div class="dot"></div>
+  </div>
+</div>
+
+<!-- SCREEN 3: THE DETAILS -->
+<div class="screen" id="s3">
+  <div class="card">
+    <div class="card-top"></div>
+    <div class="card-body">
+      <span class="card-emoji">📍</span>
+      <h1 class="card-title">Ivy & Varley</h1>
+      <p class="card-sub">Downtown Salt Lake City</p>
+
+      <div class="detail-row">
+        <span class="detail-icon">🗓</span>
+        <div>
+          <div class="detail-label">When</div>
+          <div class="detail-val">End of the week</div>
+          <div class="detail-sub">5:00 PM MST</div>
+        </div>
+      </div>
+
+      <div class="detail-row">
+        <span class="detail-icon">🚶</span>
+        <div>
+          <div class="detail-label">Distance from the office</div>
+          <div class="detail-val">One block away</div>
+        </div>
+      </div>
+
+      <div class="detail-row">
+        <span class="detail-icon">🍸</span>
+        <div>
+          <div class="detail-label">Vibe</div>
+          <div class="detail-val">Drinks & good company</div>
+          <div class="detail-sub">Googleyness welcome</div>
+        </div>
+      </div>
+
+      <button class="btn-primary" onclick="go('s4')">One more thing →</button>
+    </div>
+  </div>
+  <div class="dots">
+    <div class="dot"></div><div class="dot active"></div><div class="dot"></div>
+  </div>
+</div>
+
+<!-- SCREEN 4: GOOGLE REVEAL -->
+<div class="screen" id="s4">
+  <div class="card">
+    <div class="card-top"></div>
+    <div class="card-body">
+      <span class="card-emoji">🚀</span>
+      <h1 class="card-title">Plato is going to Silicon Valley</h1>
+      <p class="card-sub">
+        Not having to look at another eTask<br>
+        is something to celebrate.<br><br>
+        Come celebrate the end of a great chapter<br>and the beginning of something epic.
+      </p>
+      <button class="btn-primary" onclick="rsvp()">Count me in 🎉</button>
+      <button class="btn-ghost" onclick="rsvp()">I'll be there</button>
+    </div>
+  </div>
+  <div class="dots">
+    <div class="dot"></div><div class="dot"></div><div class="dot active"></div>
+  </div>
+</div>
+
+<!-- SCREEN 5: FINAL -->
+<div class="screen" id="s5">
+  <span class="final-emoji">🎉</span>
+  <h1 class="final-title">See you there!</h1>
+  <p class="final-sub">
+    Ivy & Varley · 5:00 PM MST<br>
+    One block from the office.<br><br>
+    Time to toast Plato's next adventure. 🥂
+  </p>
+  <div class="card" style="padding: 20px;">
+    <p style="font-size: 12px; color: #9aa0a6; text-align: center; margin-bottom: 12px; margin-top:8px;">Share this invite</p>
+    <button class="copy-btn" onclick="copyInvite(this)">📋 Copy invite</button>
+  </div>
+</div>
+
+<script>
+  let searched = false;
+
+  function startSearch() {
+    if (searched) return;
+    searched = true;
+    document.getElementById('tapBtn').style.display = 'none';
+    const input = document.getElementById('searchInput');
+    const text = "You're Invited to Ivy & Varley";
+    let i = 0;
+    input.value = '';
+    input.style.caretColor = '#4285F4';
+    const interval = setInterval(() => {
+      input.value += text[i];
+      i++;
+      if (i >= text.length) {
+        clearInterval(interval);
+        input.style.caretColor = 'transparent';
+        setTimeout(() => go('s2'), 800);
+      }
+    }, 55);
+  }
+
+  function go(id) {
+    document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+    document.getElementById(id).classList.add('active');
+    window.scrollTo(0, 0);
+  }
+
+  function rsvp() {
+    launchConfetti();
+    setTimeout(() => go('s5'), 1200);
+  }
+
+  function launchConfetti() {
+    const colors = ['#4285F4','#EA4335','#FBBC05','#34A853'];
+    for (let i = 0; i < 70; i++) {
+      setTimeout(() => {
+        const el = document.createElement('div');
+        el.className = 'confetti-piece';
+        el.style.left = Math.random() * 100 + 'vw';
+        el.style.background = colors[Math.floor(Math.random() * colors.length)];
+        el.style.width = (6 + Math.random() * 8) + 'px';
+        el.style.height = (6 + Math.random() * 8) + 'px';
+        el.style.borderRadius = Math.random() > 0.5 ? '50%' : '2px';
+        el.style.animationDuration = (1.5 + Math.random() * 1.5) + 's';
+        el.style.animationDelay = Math.random() * 0.5 + 's';
+        document.body.appendChild(el);
+        setTimeout(() => el.remove(), 3500);
+      }, i * 12);
+    }
+  }
+
+  function copyInvite(btn) {
+    const msg = "You're invited! 🥂\n\nJoin us at Ivy & Varley (Downtown SLC) at 5pm MST to celebrate Plato's last week at Goldman Sachs — and his new adventure in Silicon Valley. One block from the office. 🚀";
+    navigator.clipboard.writeText(msg).then(() => {
+      btn.textContent = '✅ Copied!';
+      setTimeout(() => btn.textContent = '📋 Copy invite', 2000);
+    });
+  }
+</script>
+</body>
+</html>
